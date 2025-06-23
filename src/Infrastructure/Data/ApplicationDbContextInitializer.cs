@@ -12,12 +12,12 @@ public static class InitializerExtensions
 {
     public static void AddAsyncSeeding(this DbContextOptionsBuilder builder, IServiceProvider serviceProvider)
     {
-        builder.UseAsyncSeeding(async (context, _, ct) =>
-        {
-            var initializer = serviceProvider.GetRequiredService<ApplicationDbContextInitializer>();
+        //builder.UseAsyncSeeding(async (context, _, ct) =>
+        //{
+        //    var initializer = serviceProvider.GetRequiredService<ApplicationDbContextInitializer>();
 
-            await initializer.SeedAsync();
-        });
+        //    await initializer.SeedAsync();
+        //});
     }
 
     public static async Task InitialiseDatabaseAsync(this WebApplication app)
@@ -32,8 +32,7 @@ public static class InitializerExtensions
 
 public class ApplicationDbContextInitializer(
     ILogger<ApplicationDbContextInitializer> logger,
-    ApplicationDbContext context,
-    RoleManager<IdentityRole> roleManager)
+    ApplicationDbContext context)
 {
     public async Task InitialiseAsync()
     {
@@ -66,10 +65,10 @@ public class ApplicationDbContextInitializer(
         // Default roles
         var administratorRole = new IdentityRole(Roles.Administrator);
 
-        if (roleManager.Roles.All(r => r.Name != administratorRole.Name))
-        {
-            await roleManager.CreateAsync(administratorRole);
-        }
+        //if (roleManager.Roles.All(r => r.Name != administratorRole.Name))
+        //{
+        //    await roleManager.CreateAsync(administratorRole);
+        //}
 
         // Default users
         //var administrator = new ApplicationUser { UserName = "administrator@localhost", Email = "administrator@localhost" };

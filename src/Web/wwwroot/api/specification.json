@@ -351,406 +351,24 @@
         ]
       }
     },
-    "/api/Users/register": {
+    "/api/Users/GetUsers": {
       "post": {
         "tags": [
           "Users"
         ],
-        "operationId": "PostApiUsersRegister",
+        "operationId": "GetUsers",
         "requestBody": {
-          "x-name": "registration",
+          "x-name": "filter",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterRequest"
+                "$ref": "#/components/schemas/FilterRequest"
               }
             }
           },
           "required": true,
           "x-position": 1
         },
-        "responses": {
-          "200": {
-            "description": ""
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Users/login": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "operationId": "PostApiUsersLogin",
-        "parameters": [
-          {
-            "name": "useCookies",
-            "in": "query",
-            "schema": {
-              "type": "boolean",
-              "nullable": true
-            },
-            "x-position": 2
-          },
-          {
-            "name": "useSessionCookies",
-            "in": "query",
-            "schema": {
-              "type": "boolean",
-              "nullable": true
-            },
-            "x-position": 3
-          }
-        ],
-        "requestBody": {
-          "x-name": "login",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AccessTokenResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Users/refresh": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "operationId": "PostApiUsersRefresh",
-        "requestBody": {
-          "x-name": "refreshRequest",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RefreshRequest"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AccessTokenResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Users/confirmEmail": {
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "operationId": "GetApiUsersConfirmEmail",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 1
-          },
-          {
-            "name": "code",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 2
-          },
-          {
-            "name": "changedEmail",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 3
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/Users/resendConfirmationEmail": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "operationId": "PostApiUsersResendConfirmationEmail",
-        "requestBody": {
-          "x-name": "resendRequest",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResendConfirmationEmailRequest"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/Users/forgotPassword": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "operationId": "PostApiUsersForgotPassword",
-        "requestBody": {
-          "x-name": "resetRequest",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ForgotPasswordRequest"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Users/resetPassword": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "operationId": "PostApiUsersResetPassword",
-        "requestBody": {
-          "x-name": "resetRequest",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResetPasswordRequest"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Users/manage/2fa": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "operationId": "PostApiUsersManage2fa",
-        "requestBody": {
-          "x-name": "tfaRequest",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TwoFactorRequest"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TwoFactorResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/Users/manage/info": {
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "operationId": "GetApiUsersManageInfo",
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InfoResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "operationId": "PostApiUsersManageInfo",
-        "requestBody": {
-          "x-name": "infoRequest",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InfoRequest"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InfoResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/WeatherForecasts": {
-      "get": {
-        "tags": [
-          "WeatherForecasts"
-        ],
-        "operationId": "GetWeatherForecasts",
         "responses": {
           "200": {
             "description": "",
@@ -759,18 +377,41 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
+                    "$ref": "#/components/schemas/UserDto"
                   }
                 }
               }
             }
           }
+        }
+      }
+    },
+    "/api/Users/CreateUser": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "CreateUser",
+        "requestBody": {
+          "x-name": "createUserCommand",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
         },
-        "security": [
-          {
-            "JWT": []
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "400": {
+            "description": ""
           }
-        ]
+        }
       }
     }
   },
@@ -1004,250 +645,146 @@
           }
         }
       },
-      "HttpValidationProblemDetails": {
+      "UserDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "patronymic": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        }
+      },
+      "FilterRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "pageIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterSort"
+            }
+          },
+          "filter": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterObject"
+            }
+          }
+        }
+      },
+      "FilterSort": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/ProblemDetails"
+            "$ref": "#/components/schemas/FilterBaseOfZorroSortEnum"
           },
           {
             "type": "object",
-            "additionalProperties": {
-              "nullable": true
-            },
-            "properties": {
-              "errors": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
+            "additionalProperties": false
           }
         ]
       },
-      "ProblemDetails": {
+      "FilterBaseOfZorroSortEnum": {
         "type": "object",
-        "additionalProperties": {
-          "nullable": true
-        },
+        "x-abstract": true,
+        "additionalProperties": false,
         "properties": {
-          "type": {
-            "type": "string",
-            "nullable": true
+          "key": {
+            "type": "string"
           },
-          "title": {
-            "type": "string",
-            "nullable": true
+          "value": {
+            "$ref": "#/components/schemas/ZorroSortEnum"
+          }
+        }
+      },
+      "ZorroSortEnum": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Asc",
+          "Desc"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "FilterObject": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/FilterBaseOfObject"
           },
-          "status": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "FilterBaseOfObject": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string"
           },
-          "detail": {
-            "type": "string",
-            "nullable": true
-          },
-          "instance": {
-            "type": "string",
+          "value": {
             "nullable": true
           }
         }
       },
-      "RegisterRequest": {
+      "CreateUserCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "patronymic": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string"
+          },
           "email": {
             "type": "string"
           },
           "password": {
             "type": "string"
-          }
-        }
-      },
-      "AccessTokenResponse": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "tokenType": {
-            "type": "string"
           },
-          "accessToken": {
-            "type": "string"
-          },
-          "expiresIn": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "refreshToken": {
-            "type": "string"
-          }
-        }
-      },
-      "LoginRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "twoFactorCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "twoFactorRecoveryCode": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "RefreshRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "refreshToken": {
-            "type": "string"
-          }
-        }
-      },
-      "ResendConfirmationEmailRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "email": {
-            "type": "string"
-          }
-        }
-      },
-      "ForgotPasswordRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "email": {
-            "type": "string"
-          }
-        }
-      },
-      "ResetPasswordRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "resetCode": {
-            "type": "string"
-          },
-          "newPassword": {
-            "type": "string"
-          }
-        }
-      },
-      "TwoFactorResponse": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "sharedKey": {
-            "type": "string"
-          },
-          "recoveryCodesLeft": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "recoveryCodes": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "type": "string"
-            }
-          },
-          "isTwoFactorEnabled": {
+          "isActive": {
             "type": "boolean"
-          },
-          "isMachineRemembered": {
-            "type": "boolean"
-          }
-        }
-      },
-      "TwoFactorRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "enable": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "twoFactorCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "resetSharedKey": {
-            "type": "boolean"
-          },
-          "resetRecoveryCodes": {
-            "type": "boolean"
-          },
-          "forgetMachine": {
-            "type": "boolean"
-          }
-        }
-      },
-      "InfoResponse": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "isEmailConfirmed": {
-            "type": "boolean"
-          }
-        }
-      },
-      "InfoRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "newEmail": {
-            "type": "string",
-            "nullable": true
-          },
-          "newPassword": {
-            "type": "string",
-            "nullable": true
-          },
-          "oldPassword": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "WeatherForecast": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "date": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "temperatureC": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "temperatureF": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "summary": {
-            "type": "string",
-            "nullable": true
           }
         }
       }

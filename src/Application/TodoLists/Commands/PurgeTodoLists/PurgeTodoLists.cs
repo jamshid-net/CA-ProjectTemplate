@@ -8,19 +8,12 @@ namespace ProjectTemplate.Application.TodoLists.Commands.PurgeTodoLists;
 [Authorize(Policy = Policies.CanPurge)]
 public record PurgeTodoListsCommand : IRequest;
 
-public class PurgeTodoListsCommandHandler : IRequestHandler<PurgeTodoListsCommand>
+public class PurgeTodoListsCommandHandler(IApplicationDbContext context) : IRequestHandler<PurgeTodoListsCommand>
 {
-    private readonly IApplicationDbContext _context;
-
-    public PurgeTodoListsCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task Handle(PurgeTodoListsCommand request, CancellationToken cancellationToken)
     {
-        _context.TodoLists.RemoveRange(_context.TodoLists);
+        context.TodoLists.RemoveRange(context.TodoLists);
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
     }
 }

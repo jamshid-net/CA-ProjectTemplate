@@ -6,8 +6,7 @@ using ProjectTemplate.Application.Common.Security;
 namespace ProjectTemplate.Application.Common.Behaviours;
 
 public class AuthorizationBehaviour<TRequest, TResponse>(
-    IUser user,
-    IIdentityService identityService) : IPipelineBehavior<TRequest, TResponse>
+    IUser user) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -33,12 +32,12 @@ public class AuthorizationBehaviour<TRequest, TResponse>(
                 {
                     foreach (var role in roles)
                     {
-                        var isInRole = await identityService.IsInRoleAsync(user.Id, role.Trim());
-                        if (isInRole)
-                        {
-                            authorized = true;
-                            break;
-                        }
+                        //var isInRole = await identityService.IsInRoleAsync(user.Id, role.Trim());
+                        //if (isInRole)
+                        //{
+                        //    authorized = true;
+                        //    break;
+                        //}
                     }
                 }
 
@@ -55,12 +54,12 @@ public class AuthorizationBehaviour<TRequest, TResponse>(
             {
                 foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy))
                 {
-                    var authorized = await identityService.AuthorizeAsync(user.Id, policy);
+                    //var authorized = await identityService.AuthorizeAsync(user.Id, policy);
 
-                    if (!authorized)
-                    {
-                        throw new ForbiddenAccessException();
-                    }
+                    //if (!authorized)
+                    //{
+                    //    throw new ForbiddenAccessException();
+                    //}
                 }
             }
         }

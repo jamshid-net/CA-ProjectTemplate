@@ -11,9 +11,11 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common\Shared.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 

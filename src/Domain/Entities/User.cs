@@ -11,4 +11,6 @@ public class User : BaseAuditableEntity
     public string? ProfilePictureUrl { get; set; }
     public string PasswordHash { get; set; } = null!;
     public string PasswordSalt { get; set; } = null!;
+    public int FailedLoginAttempts { get; set; } = 0;
+
 }

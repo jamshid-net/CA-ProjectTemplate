@@ -11,6 +11,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<TodoItem> TodoItems => Set<TodoItem>();
 
+    public DbSet<User> Users => Set<User>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

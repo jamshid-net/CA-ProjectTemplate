@@ -1,11 +1,9 @@
-﻿using Azure.Identity;
+﻿using Microsoft.AspNetCore.Mvc;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 using ProjectTemplate.Application.Common.Interfaces;
 using ProjectTemplate.Infrastructure.Data;
 using ProjectTemplate.Web.Services;
-using Microsoft.AspNetCore.Mvc;
-
-using NSwag;
-using NSwag.Generation.Processors.Security;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -52,9 +50,9 @@ public static class DependencyInjection
         var keyVaultUri = builder.Configuration["AZURE_KEY_VAULT_ENDPOINT"];
         if (!string.IsNullOrWhiteSpace(keyVaultUri))
         {
-            builder.Configuration.AddAzureKeyVault(
-                new Uri(keyVaultUri),
-                new DefaultAzureCredential());
+            //builder.Configuration.AddAzureKeyVault(
+            //    new Uri(keyVaultUri),
+            //    new DefaultAzureCredential());
         }
     }
 }

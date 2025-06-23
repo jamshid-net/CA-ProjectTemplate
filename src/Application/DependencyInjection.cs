@@ -1,8 +1,9 @@
 ﻿using System.Reflection;
-using ProjectTemplate.Application.Common.Behaviours;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProjectTemplate.Application.Common.Behaviours;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace ProjectTemplate.Application;
 
 public static class DependencyInjection
 {
