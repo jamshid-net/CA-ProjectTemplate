@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http.HttpResults;
 using ProjectTemplate.Application.Common.QueryFilter;
-using ProjectTemplate.Application.TodoLists.Queries.GetTodos;
-using ProjectTemplate.Application.Users.Commands;
-using ProjectTemplate.Application.Users.Queries;
+using ProjectTemplate.Application.Users.Manage.Commands;
+using ProjectTemplate.Application.Users.Manage.Queries;
+using ProjectTemplate.Domain.Enums;
 
 namespace ProjectTemplate.Web.Endpoints;
 
@@ -12,10 +12,8 @@ public class Users : EndpointGroupBase
     public override void Map(WebApplication app)
     {
         app.MapGroup(this)
-            .MapPost(GetUsers, "GetUsers")
-            .MapPost(CreateUser, "CreateUser");
-
-
+            .MapPost(GetUsers, EnumPermission.CreateUser)
+            .MapPost(CreateUser, EnumPermission.CreateUser);
 
     }
 

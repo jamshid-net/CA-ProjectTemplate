@@ -6,7 +6,35 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/TodoItems": {
+    "/api/Roles/CreateRole": {
+      "post": {
+        "tags": [
+          "Roles"
+        ],
+        "operationId": "CreateRole",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoleCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          },
+          "400": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/TodoItems/GetTodoItemsWithPagination": {
       "get": {
         "tags": [
           "TodoItems"
@@ -61,7 +89,9 @@
             "JWT": []
           }
         ]
-      },
+      }
+    },
+    "/api/TodoItems/CreateTodoItem": {
       "post": {
         "tags": [
           "TodoItems"
@@ -217,7 +247,7 @@
         ]
       }
     },
-    "/api/TodoLists": {
+    "/api/TodoLists/GetTodoLists": {
       "get": {
         "tags": [
           "TodoLists"
@@ -240,7 +270,9 @@
             "JWT": []
           }
         ]
-      },
+      }
+    },
+    "/api/TodoLists/CreateTodoList": {
       "post": {
         "tags": [
           "TodoLists"
@@ -417,6 +449,22 @@
   },
   "components": {
     "schemas": {
+      "CreateRoleCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "permissionIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
       "PaginatedListOfTodoItemBriefDto": {
         "type": "object",
         "additionalProperties": false,
@@ -777,14 +825,15 @@
           "userName": {
             "type": "string"
           },
-          "email": {
-            "type": "string"
-          },
           "password": {
             "type": "string"
           },
           "isActive": {
             "type": "boolean"
+          },
+          "roleId": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       }

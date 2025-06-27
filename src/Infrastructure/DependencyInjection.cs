@@ -28,20 +28,19 @@ public static class DependencyInjection
                 .UseSnakeCaseNamingConvention()
                 .AddAsyncSeeding(sp);
         });
-
-
+    
+        //builder.Services.Add
         builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
         builder.Services.AddScoped<ApplicationDbContextInitializer>();
 
-        builder.Services.AddAuthentication()
-            .AddBearerToken(IdentityConstants.BearerScheme);
-
-        builder.Services.AddAuthorizationBuilder();
 
         builder.Services.AddSingleton(TimeProvider.System);
 
-        builder.Services.AddAuthorization(options =>
-            options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator)));
+
+
+
+
+
     }
 }

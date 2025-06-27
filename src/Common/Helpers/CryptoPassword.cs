@@ -5,9 +5,9 @@ namespace ProjectTemplate.Shared.Helpers;
 
 public static class CryptoPassword
 {
-    public const int SaltSize = 32; // size in bytes
-    public const int HashSize = 64; // size in bytes
-    public const int Iterations = 1000; // number of pbkdf2 iterations
+    public const int SaltSize = 32;
+    public const int HashSize = 64;
+    public const int Iterations = 1000;
 
     public class HashSalt
     {
@@ -22,7 +22,7 @@ public static class CryptoPassword
         RandomNumberGenerator.Create().GetNonZeroBytes(saltBytes);
 
         var salt = ByteArrayToString(saltBytes);
-        Byte[] byteValue = Encoding.UTF8.GetBytes(salt);
+        byte[] byteValue = Encoding.UTF8.GetBytes(salt);
 
         using var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, byteValue, Iterations, HashAlgorithmName.SHA256);
         var hashPassword = ByteArrayToString(rfc2898DeriveBytes.GetBytes(HashSize));
@@ -32,23 +32,21 @@ public static class CryptoPassword
 
     public static string GetHashSalted(string password, string salt)
     {
-
         byte[] saltBytes = Encoding.Default.GetBytes(salt);
-
         using var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, saltBytes, Iterations, HashAlgorithmName.SHA256);
         var hashPassword = ByteArrayToString(rfc2898DeriveBytes.GetBytes(HashSize));
         return hashPassword;
     }
 
-    public static string ByteArrayToString(byte[] ba)
+    private static string ByteArrayToString(IReadOnlyCollection<byte> ba)
     {
-        StringBuilder hex = new StringBuilder(ba.Length * 2);
+        StringBuilder hex = new(ba.Count * 2);
         foreach (byte b in ba)
             hex.AppendFormat("{0:x2}", b);
         return hex.ToString();
     }
 
-    public static byte[] StringToByteArray(String hex)
+    private static byte[] StringToByteArray(string hex)
     {
         int numberChars = hex.Length;
         byte[] bytes = new byte[numberChars / 2];

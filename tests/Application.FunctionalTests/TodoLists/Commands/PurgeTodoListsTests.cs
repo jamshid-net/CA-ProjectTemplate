@@ -1,5 +1,5 @@
-﻿using ProjectTemplate.Application.Common.Exceptions;
-using ProjectTemplate.Application.Common.Security;
+﻿using Microsoft.AspNetCore.Authorization;
+using ProjectTemplate.Application.Common.Exceptions;
 using ProjectTemplate.Application.TodoLists.Commands.CreateTodoList;
 using ProjectTemplate.Application.TodoLists.Commands.PurgeTodoLists;
 using ProjectTemplate.Domain.Entities;

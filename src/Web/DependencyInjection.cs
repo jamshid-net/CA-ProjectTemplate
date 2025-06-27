@@ -5,7 +5,7 @@ using ProjectTemplate.Application.Common.Interfaces;
 using ProjectTemplate.Infrastructure.Data;
 using ProjectTemplate.Web.Services;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace ProjectTemplate.Web;
 
 public static class DependencyInjection
 {
@@ -45,14 +45,4 @@ public static class DependencyInjection
         });
     }
 
-    public static void AddKeyVaultIfConfigured(this IHostApplicationBuilder builder)
-    {
-        var keyVaultUri = builder.Configuration["AZURE_KEY_VAULT_ENDPOINT"];
-        if (!string.IsNullOrWhiteSpace(keyVaultUri))
-        {
-            //builder.Configuration.AddAzureKeyVault(
-            //    new Uri(keyVaultUri),
-            //    new DefaultAzureCredential());
-        }
-    }
 }

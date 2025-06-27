@@ -1,15 +1,17 @@
 using ProjectTemplate.Application;
 using ProjectTemplate.Infrastructure;
 using ProjectTemplate.Infrastructure.Data;
+using ProjectTemplate.Shared.Extensions;
+using ProjectTemplate.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.AddKeyVaultIfConfigured();
+
 builder.AddApplicationServices();
 builder.AddInfrastructureServices();
 builder.AddWebServices();
-
+builder.AddProjectTemplateAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

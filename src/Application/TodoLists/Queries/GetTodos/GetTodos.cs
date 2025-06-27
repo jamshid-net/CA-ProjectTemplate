@@ -1,11 +1,9 @@
 ﻿using ProjectTemplate.Application.Common.Interfaces;
 using ProjectTemplate.Application.Common.Models;
-using ProjectTemplate.Application.Common.Security;
 using ProjectTemplate.Domain.Enums;
 
 namespace ProjectTemplate.Application.TodoLists.Queries.GetTodos;
 
-[Authorize]
 public record GetTodosQuery : IRequest<TodosVm>;
 
 public class GetTodosQueryHandler(IApplicationDbContext context, IMapper mapper)
