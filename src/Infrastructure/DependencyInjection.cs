@@ -29,7 +29,7 @@ public static class DependencyInjection
                 .AddAsyncSeeding(sp);
         });
     
-        //builder.Services.Add
+        ///builder.Services.Add
         builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
         builder.Services.AddScoped<ApplicationDbContextInitializer>();
