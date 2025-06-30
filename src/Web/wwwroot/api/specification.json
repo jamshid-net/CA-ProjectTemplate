@@ -34,6 +34,95 @@
         }
       }
     },
+    "/api/TestPostgresqlCache/GetValue": {
+      "get": {
+        "tags": [
+          "TestPostgresqlCache"
+        ],
+        "operationId": "GetValue",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/TestPostgresqlCache/SetValue": {
+      "post": {
+        "tags": [
+          "TestPostgresqlCache"
+        ],
+        "operationId": "SetValue",
+        "requestBody": {
+          "x-name": "cacheItem",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CacheItemOfString"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          },
+          "400": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/TestPostgresqlCache/RemoveValue": {
+      "delete": {
+        "tags": [
+          "TestPostgresqlCache"
+        ],
+        "operationId": "RemoveValue",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/TodoItems/GetTodoItemsWithPagination": {
       "get": {
         "tags": [
@@ -462,6 +551,24 @@
               "type": "integer",
               "format": "int32"
             }
+          }
+        }
+      },
+      "CacheItemOfString": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          },
+          "expirationInSeconds": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         }
       },

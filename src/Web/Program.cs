@@ -1,6 +1,5 @@
 using ProjectTemplate.Application;
 using ProjectTemplate.Infrastructure;
-using ProjectTemplate.Infrastructure.Data;
 using ProjectTemplate.Shared.Extensions;
 using ProjectTemplate.Web;
 

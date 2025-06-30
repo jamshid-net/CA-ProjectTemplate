@@ -7,7 +7,7 @@ using ProjectTemplate.Shared.Constants;
 using Serilog;
 
 namespace ProjectTemplate.Application.Common.Exceptions;
-internal sealed class GlobalExceptionHandler(IHostEnvironment hostEnvironment) : IExceptionHandler
+public sealed class GlobalExceptionHandler(IHostEnvironment hostEnvironment) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
        HttpContext httpContext,
@@ -18,7 +18,7 @@ internal sealed class GlobalExceptionHandler(IHostEnvironment hostEnvironment) :
         var (result, writeLog) = exception switch
         {
 
-            ModelIsNullException => (Results.Conflict(responseMessage), false),
+            ArgumentNullException or ModelIsNullException => (Results.Conflict(responseMessage), false),
             NotFoundException or FileNotFoundException => (Results.NotFound(responseMessage), false),
             ValidationException => (Results.UnprocessableEntity(responseMessage), true),
             AlreadyExistException or ConflictException or JsonSerializationException => (Results.Conflict(responseMessage), true),
@@ -30,20 +30,22 @@ internal sealed class GlobalExceptionHandler(IHostEnvironment hostEnvironment) :
         if (writeLog)
         {
 
-            var logMessage = $@"
-🚨Error Log🚨
+            var logMessage = $"""
 
-📱App: {hostEnvironment.ApplicationName}:{hostEnvironment.EnvironmentName}.
+                              🚨Error Log🚨
 
-⚠️Exception Type: {exception.GetType().Name}.
+                              📱App: {hostEnvironment.ApplicationName}:{hostEnvironment.EnvironmentName}.
 
-📝Message: {exception.Message}
+                              ⚠️Exception Type: {exception.GetType().Name}.
 
-🔗Path: {httpContext.Request.Path}.
+                              📝Message: {exception.Message}
 
-👤User: {httpContext.User.Claims.FirstOrDefault(x => x.Type == StaticClaims.FullName)?.Value ?? "Unauthorized user"}.
-👤User Id: {httpContext.User.Claims.FirstOrDefault(x => x.Type == StaticClaims.UserId)?.Value ?? "Unauthorized user"}.
-";
+                              🔗Path: {httpContext.Request.Path}.
+
+                              👤User: {httpContext.User.Claims.FirstOrDefault(x => x.Type == StaticClaims.FullName)?.Value ?? "Unauthorized user"}.
+                              👤User Id: {httpContext.User.Claims.FirstOrDefault(x => x.Type == StaticClaims.UserId)?.Value ?? "Unauthorized user"}.
+
+                              """;
 
             Log.Error(logMessage);
         }

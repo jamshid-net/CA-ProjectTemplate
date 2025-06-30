@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NSwag;
 using NSwag.Generation.Processors.Security;
+using ProjectTemplate.Application.Common.Exceptions;
 using ProjectTemplate.Application.Common.Interfaces;
 using ProjectTemplate.Infrastructure.Data;
 using ProjectTemplate.Web.Services;
@@ -19,7 +20,7 @@ public static class DependencyInjection
         builder.Services.AddHealthChecks()
             .AddDbContextCheck<ApplicationDbContext>();
 
-        builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 
         // Customise default API behaviour
