@@ -7,7 +7,7 @@ using ProjectTemplate.Domain.Common;
 namespace ProjectTemplate.Infrastructure.Data.Interceptors;
 
 public class AuditableEntityInterceptor(
-    IUser user,
+    ICurrentUser currentUser,
     TimeProvider dateTime) : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
@@ -35,10 +35,10 @@ public class AuditableEntityInterceptor(
                 var utcNow = dateTime.GetUtcNow();
                 if (entry.State is EntityState.Added)
                 {
-                    entry.Entity.CreatedBy = user.Id;
+                    entry.Entity.CreatedBy = currentUser.Id;
                     entry.Entity.Created = utcNow;
                 }
-                entry.Entity.LastModifiedBy = user.Id;
+                entry.Entity.LastModifiedBy = currentUser.Id;
                 entry.Entity.LastModified = utcNow;
             }
         }

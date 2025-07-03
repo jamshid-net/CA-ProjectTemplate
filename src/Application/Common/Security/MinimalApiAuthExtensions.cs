@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectTemplate.Domain.Enums;
 using ProjectTemplate.Shared.Constants;
@@ -19,21 +18,14 @@ public static class MinimalApiAuthExtensions
             var user = httpContext.User;
 
             // 1. Authenticated?
-            if (user?.Identity is not { IsAuthenticated: true })
+            if (user?.Identity is { IsAuthenticated: false })
                 return Results.Unauthorized();
 
-            // 2. User ID
-            //if (!int.TryParse(user.FindFirst(StaticClaims.UserId)?.Value, out int userId))
-            //    return Results.Unauthorized();
-
-            var cacheService = httpContext.RequestServices.GetRequiredService<IPostgresCacheService>();
-            //3.Blacklist check(resolve SystemCacheService)
-            //if (await systemCache.IsUserBlackListed(userId))
-            //    return Results.Unauthorized();
-
-            // 4. Permissions check
+            // 2. Permissions check
             if (enumPermissions is { Length: > 0 })
             {
+                var cacheService = httpContext.RequestServices.GetRequiredService<IPostgresCacheService>();
+
                 if (!int.TryParse(user?.FindFirst(StaticClaims.RoleId)?.Value, out int userRoleId))
                     return Results.Forbid();
 
@@ -41,7 +33,7 @@ public static class MinimalApiAuthExtensions
                 if (permissions is not null && !permissions.Intersect(enumPermissions).Any())
                 {
                     // Custom forbidden response
-                    var msg = $"Missing required permissions: {string.Join(", ", enumPermissions)}";
+                    //var msg = $"Missing required permissions: {string.Join(", ", enumPermissions)}";
                     //return Results.Problem(detail: msg, statusCode: StatusCodes.Status403Forbidden);
                     return Results.Forbid();
                 }

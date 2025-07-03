@@ -14,7 +14,7 @@ public class Users : EndpointGroupBase
 {
     public override void Map(RouteGroupBuilder group)
     {
-        group.MapPost(GetUsers);
+        group.MapPost(GetUsers).RequiredPermission();
         group.MapPost(CreateUser).RequiredPermission(EnumPermission.CreateUser);
         group.MapPost(Login);
     }

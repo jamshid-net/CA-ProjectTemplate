@@ -53,10 +53,8 @@ public class Roles : EndpointGroupBase
         return TypedResults.Ok(role);
     }
 
-    public async Task<Ok<PageList<RoleDto>>> GetRoles(ISender sender, IUser user, [FromBody] GetRolesFilterQuery filterQueryFilterQueryRequest, CancellationToken ct)
+    public async Task<Ok<PageList<RoleDto>>> GetRoles(ISender sender, ICurrentUser currentUser, [FromBody] GetRolesFilterQuery filterQueryFilterQueryRequest, CancellationToken ct)
     {
-        var currentUser = user.Id ?? string.Empty;
-        Log.Information("Current User ID: {UserId}", currentUser);
         var roles = await sender.Send(filterQueryFilterQueryRequest, ct);
         return TypedResults.Ok(roles);
     }
