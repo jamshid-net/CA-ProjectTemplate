@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ProjectTemplate.Domain.Constants;
-using ProjectTemplate.Domain.Entities;
+using ProjectTemplate.Domain.Entities.Auth;
+using ProjectTemplate.Domain.Enums;
+using ProjectTemplate.Shared.PostgresqlCache;
 
 namespace ProjectTemplate.Infrastructure.Data;
 
@@ -12,12 +13,12 @@ public static class InitializerExtensions
 {
     public static void AddAsyncSeeding(this DbContextOptionsBuilder builder, IServiceProvider serviceProvider)
     {
-        //builder.UseAsyncSeeding(async (context, _, ct) =>
-        //{
-        //    var initializer = serviceProvider.GetRequiredService<ApplicationDbContextInitializer>();
+        builder.UseAsyncSeeding(async (context, _, ct) =>
+        {
+            var initializer = serviceProvider.GetRequiredService<ApplicationDbContextInitializer>();
 
-        //    await initializer.SeedAsync();
-        //});
+            await initializer.SeedAsync();
+        });
     }
 
     public static async Task InitialiseDatabaseAsync(this WebApplication app)
@@ -32,6 +33,7 @@ public static class InitializerExtensions
 
 public class ApplicationDbContextInitializer(
     ILogger<ApplicationDbContextInitializer> logger,
+    IPostgresCacheService cacheService,
     ApplicationDbContext context)
 {
     public async Task InitialiseAsync()
@@ -51,54 +53,93 @@ public class ApplicationDbContextInitializer(
     {
         try
         {
-            await TrySeedAsync();
+            await TrySeedPermissionsAsync();
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "An error occurred while seeding the database.");
             throw;
         }
+        finally
+        {
+            await LoadPermissionToCacheAsync();
+        }
     }
 
-    public async Task TrySeedAsync()
+    public async Task TrySeedPermissionsAsync()
     {
-        // Default roles
-        var administratorRole = new IdentityRole(Roles.Administrator);
+        var defaultPermissions = DefaultPermissions();
+        var existingPermissions = await context.Permissions
+            .IgnoreQueryFilters()
+            .Where(p => defaultPermissions.Select(dp => dp.Id).Contains(p.Id))
+            .ToListAsync();
 
-        //if (roleManager.Roles.All(r => r.Name != administratorRole.Name))
-        //{
-        //    await roleManager.CreateAsync(administratorRole);
-        //}
-
-        // Default users
-        //var administrator = new ApplicationUser { UserName = "administrator@localhost", Email = "administrator@localhost" };
-
-        //if (_userManager.Users.All(u => u.UserName != administrator.UserName))
-        //{
-        //    await _userManager.CreateAsync(administrator, "Administrator1!");
-        //    if (!string.IsNullOrWhiteSpace(administratorRole.Name))
-        //    {
-        //        await _userManager.AddToRolesAsync(administrator, new [] { administratorRole.Name });
-        //    }
-        //}
-
-        // Default data
-        // Seed, if necessary
-        if (!context.TodoLists.Any())
+        foreach (var permission in defaultPermissions)
         {
-            context.TodoLists.Add(new TodoList
-            {
-                Title = "Todo List",
-                Items =
-                {
-                    new TodoItem { Title = "Make a todo list 📃" },
-                    new TodoItem { Title = "Check off the first item ✅" },
-                    new TodoItem { Title = "Realise you've already done two things on the list! 🤯"},
-                    new TodoItem { Title = "Reward yourself with a nice, long nap 🏆" },
-                }
-            });
+            var existingPermission = existingPermissions.FirstOrDefault(p => p.Id == permission.Id);
 
-            await context.SaveChangesAsync();
+            if (existingPermission == null)
+            {
+                // Insert the new permission without the need for IDENTITY_INSERT
+                await context.Permissions.AddAsync(permission);
+                await context.SaveChangesAsync();
+            }
+            else
+            {
+                // Update existing permission if necessary
+                if (existingPermission.Name != permission.Name || existingPermission.EnumPermission != permission.EnumPermission)
+                {
+                    existingPermission.EnumPermission = permission.EnumPermission;
+                    context.Permissions.Update(existingPermission);
+                    await context.SaveChangesAsync();
+                }
+            }
         }
+
+        var defaultPermissionIds = defaultPermissions.Select(dp => dp.Id);
+        await context.Permissions.Where(p => !defaultPermissionIds.Contains(p.Id))
+            .ExecuteDeleteAsync();
+    }
+
+    private async Task LoadPermissionToCacheAsync()
+    {
+        var roleIdAndPermissions = await context.Roles.AsNoTracking()
+                     .Select(x => new
+                     {
+                         RoleId = x.Id,
+                         EnumPermissions = x.Permissions.Select(p => p.EnumPermission)
+                     }).ToDictionaryAsync(x => $"role_id:{x.RoleId}", y => y.EnumPermissions.ToArray());
+
+        try
+        {
+            foreach (var roleIdAndPermission in roleIdAndPermissions)
+            {
+                await cacheService.SetAsync(new CacheItem<EnumPermission[]>(roleIdAndPermission.Key, roleIdAndPermission.Value, null));
+            }
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "An error occurred while loading permissions to cache.");
+            throw;
+        }
+    }
+
+    private static Permission[] DefaultPermissions()
+    {
+        var enumPermissions = Enum.GetValues<EnumPermission>();
+     
+        var authPermissions = enumPermissions.Select(permission =>
+        {
+            if (permission == 0)
+            {
+                throw new InvalidOperationException($"{permission.ToString()} cannot be start value from 0. Permission ID cannot be 0.");
+            }
+            return new Permission
+            {
+                Id = (int)permission,
+                EnumPermission = permission
+            };
+        }).ToArray();
+        return authPermissions;
     }
 }

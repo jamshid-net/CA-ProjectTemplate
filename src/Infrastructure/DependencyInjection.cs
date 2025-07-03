@@ -27,14 +27,14 @@ public static class DependencyInjection
                 .UseSnakeCaseNamingConvention()
                 .AddAsyncSeeding(sp);
         });
-
+        
         builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
         builder.Services.AddScoped<ApplicationDbContextInitializer>();
+        builder.AddPostgresqlCache(connectionString);
 
         builder.Services.AddSingleton(TimeProvider.System);
 
-        builder.AddPostgresqlCache(connectionString);
 
     }
 }

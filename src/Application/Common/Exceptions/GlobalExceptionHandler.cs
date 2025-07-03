@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using ProjectTemplate.Application.Common.Constants;
 using ProjectTemplate.Domain.Exceptions;
 using ProjectTemplate.Shared.Constants;
 using Serilog;
@@ -9,6 +10,7 @@ using Serilog;
 namespace ProjectTemplate.Application.Common.Exceptions;
 public sealed class GlobalExceptionHandler(IHostEnvironment hostEnvironment) : IExceptionHandler
 {
+
     public async ValueTask<bool> TryHandleAsync(
        HttpContext httpContext,
        Exception exception,
@@ -30,7 +32,9 @@ public sealed class GlobalExceptionHandler(IHostEnvironment hostEnvironment) : I
         if (writeLog)
         {
 
-            var logMessage = $"""
+            var userId = httpContext.User.Claims.FirstOrDefault(x => x.Type == StaticClaims.UserId)?.Value ?? "Unauthorized user";
+
+            var errorMessageForTelegram = $"""
 
                               🚨Error Log🚨
 
@@ -42,12 +46,22 @@ public sealed class GlobalExceptionHandler(IHostEnvironment hostEnvironment) : I
 
                               🔗Path: {httpContext.Request.Path}.
 
-                              👤User: {httpContext.User.Claims.FirstOrDefault(x => x.Type == StaticClaims.FullName)?.Value ?? "Unauthorized user"}.
-                              👤User Id: {httpContext.User.Claims.FirstOrDefault(x => x.Type == StaticClaims.UserId)?.Value ?? "Unauthorized user"}.
+                              👤User Id: {userId}.
 
                               """;
 
-            Log.Error(logMessage);
+
+            Log.Error("Exception in {App}:{Env}. Type: {ExceptionType}. Path: {Path}. Message: {Message}. UserId: {UserId}",
+                hostEnvironment.ApplicationName,
+                hostEnvironment.EnvironmentName,
+                exception.GetType().Name,
+                httpContext.Request.Path,
+                exception.Message,
+                userId);
+
+
+            TelegramLog.LogError(errorMessageForTelegram);
+
         }
 
         await result.ExecuteAsync(httpContext);

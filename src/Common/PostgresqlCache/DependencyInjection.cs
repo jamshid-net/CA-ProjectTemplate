@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
 
@@ -15,34 +16,29 @@ public static class DependencyInjection
 
         builder.Services.AddSingleton<IPostgresCacheService, PostgresCacheService>();
 
-        builder.Services.AddHostedService(provider =>
-        {
-            var dataSource = provider.GetRequiredService<NpgsqlDataSource>();
-            InitCacheTable(dataSource);
-            return new CacheCleanerService(dataSource);
-        });
+        builder.Services.AddHostedService<CacheCleanerService>();
     }
 
-    private static void InitCacheTable(NpgsqlDataSource dataSource)
+    public static async Task UsePostgresqlCacheAsync(this WebApplication app)
     {
-        
-        using var connection = dataSource.OpenConnection();
+        var dataSource = app.Services.GetRequiredService<NpgsqlDataSource>();
+
+        await using var connection = await dataSource.OpenConnectionAsync();
 
         var commandText = """
                               CREATE UNLOGGED TABLE IF NOT EXISTS cache (
-                                  id SERIAL PRIMARY KEY,
-                                  key TEXT NOT NULL UNIQUE,
+                                  key TEXT PRIMARY KEY,
                                   value JSONB,
                                   expiration TIMESTAMP WITH TIME ZONE,
                                   created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                               );
                           
-                              CREATE INDEX IF NOT EXISTS idx_cache_key ON cache(key);
+                              CREATE INDEX IF NOT EXISTS idx_cache_expiration ON cache(expiration);
                           """;
 
-        using var command = connection.CreateCommand();
+        await using var command = connection.CreateCommand();
         command.CommandText = commandText;
-        command.ExecuteNonQuery();
+        await command.ExecuteNonQueryAsync();
 
     }
 }

@@ -9,6 +9,7 @@
     "/api/Roles/CreateRole": {
       "post": {
         "tags": [
+          "Roles",
           "Roles"
         ],
         "operationId": "CreateRole",
@@ -25,6 +26,12 @@
           "x-position": 1
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
           "201": {
             "description": ""
           },
@@ -34,9 +41,134 @@
         }
       }
     },
+    "/api/Roles/UpdateRole": {
+      "put": {
+        "tags": [
+          "Roles",
+          "Roles"
+        ],
+        "operationId": "UpdateRole",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "400": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/Roles/DeleteRole": {
+      "delete": {
+        "tags": [
+          "Roles",
+          "Roles"
+        ],
+        "operationId": "DeleteRole",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteRoleCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "400": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/Roles/GetRoleDetails": {
+      "get": {
+        "tags": [
+          "Roles",
+          "Roles"
+        ],
+        "operationId": "GetRoleDetails",
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleDetailsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Roles/GetRoles": {
+      "post": {
+        "tags": [
+          "Roles",
+          "Roles"
+        ],
+        "operationId": "GetRoles",
+        "requestBody": {
+          "x-name": "filterRequest",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageListOfRoleDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/TestPostgresqlCache/GetValue": {
       "get": {
         "tags": [
+          "TestPostgresqlCache",
           "TestPostgresqlCache"
         ],
         "operationId": "GetValue",
@@ -71,6 +203,7 @@
     "/api/TestPostgresqlCache/SetValue": {
       "post": {
         "tags": [
+          "TestPostgresqlCache",
           "TestPostgresqlCache"
         ],
         "operationId": "SetValue",
@@ -87,6 +220,12 @@
           "x-position": 1
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
           "201": {
             "description": ""
           },
@@ -99,6 +238,7 @@
     "/api/TestPostgresqlCache/RemoveValue": {
       "delete": {
         "tags": [
+          "TestPostgresqlCache",
           "TestPostgresqlCache"
         ],
         "operationId": "RemoveValue",
@@ -114,6 +254,12 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
           "204": {
             "description": ""
           },
@@ -126,6 +272,7 @@
     "/api/TodoItems/GetTodoItemsWithPagination": {
       "get": {
         "tags": [
+          "TodoItems",
           "TodoItems"
         ],
         "operationId": "GetTodoItemsWithPagination",
@@ -172,17 +319,13 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
     "/api/TodoItems/CreateTodoItem": {
       "post": {
         "tags": [
+          "TodoItems",
           "TodoItems"
         ],
         "operationId": "CreateTodoItem",
@@ -199,6 +342,12 @@
           "x-position": 1
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
           "201": {
             "description": "",
             "content": {
@@ -210,17 +359,13 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
     "/api/TodoItems/{id}": {
       "put": {
         "tags": [
+          "TodoItems",
           "TodoItems"
         ],
         "operationId": "UpdateTodoItem",
@@ -249,21 +394,23 @@
           "x-position": 2
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
           "204": {
             "description": ""
           },
           "400": {
             "description": ""
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
+          "TodoItems",
           "TodoItems"
         ],
         "operationId": "DeleteTodoItem",
@@ -280,20 +427,22 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
           "204": {
             "description": ""
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
     "/api/TodoItems/UpdateDetail/{id}": {
       "put": {
         "tags": [
+          "TodoItems",
           "TodoItems"
         ],
         "operationId": "UpdateTodoItemDetail",
@@ -322,23 +471,25 @@
           "x-position": 2
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
           "204": {
             "description": ""
           },
           "400": {
             "description": ""
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
     "/api/TodoLists/GetTodoLists": {
       "get": {
         "tags": [
+          "TodoLists",
           "TodoLists"
         ],
         "operationId": "GetTodoLists",
@@ -353,17 +504,13 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
     "/api/TodoLists/CreateTodoList": {
       "post": {
         "tags": [
+          "TodoLists",
           "TodoLists"
         ],
         "operationId": "CreateTodoList",
@@ -380,6 +527,12 @@
           "x-position": 1
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
           "201": {
             "description": "",
             "content": {
@@ -391,17 +544,13 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
     "/api/TodoLists/{id}": {
       "put": {
         "tags": [
+          "TodoLists",
           "TodoLists"
         ],
         "operationId": "UpdateTodoList",
@@ -430,21 +579,23 @@
           "x-position": 2
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
           "204": {
             "description": ""
           },
           "400": {
             "description": ""
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
+          "TodoLists",
           "TodoLists"
         ],
         "operationId": "DeleteTodoList",
@@ -461,20 +612,22 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
           "204": {
             "description": ""
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
     "/api/Users/GetUsers": {
       "post": {
         "tags": [
+          "Users",
           "Users"
         ],
         "operationId": "GetUsers",
@@ -496,10 +649,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UserDto"
-                  }
+                  "$ref": "#/components/schemas/PageListOfUserDto"
                 }
               }
             }
@@ -510,6 +660,7 @@
     "/api/Users/CreateUser": {
       "post": {
         "tags": [
+          "Users",
           "Users"
         ],
         "operationId": "CreateUser",
@@ -534,6 +685,39 @@
           }
         }
       }
+    },
+    "/api/Users/Login": {
+      "post": {
+        "tags": [
+          "Users",
+          "Users"
+        ],
+        "operationId": "Login",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -551,6 +735,215 @@
               "type": "integer",
               "format": "int32"
             }
+          }
+        }
+      },
+      "UpdateRoleCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "permissionIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "DeleteRoleCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "roleId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RoleDetailsDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseAuditDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "name": {
+                "type": "string"
+              },
+              "permissions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "BaseAuditDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastModified": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastModifiedBy": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PageListOfRoleDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "pageIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageTotal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "filteredTotal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoleDto"
+            }
+          }
+        }
+      },
+      "RoleDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "FilterRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "pageIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterSort"
+            }
+          },
+          "filter": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterObject"
+            }
+          }
+        }
+      },
+      "FilterSort": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/FilterBaseOfZorroSortEnum"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "FilterBaseOfZorroSortEnum": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "$ref": "#/components/schemas/ZorroSortEnum"
+          }
+        }
+      },
+      "ZorroSortEnum": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Asc",
+          "Desc"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "FilterObject": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/FilterBaseOfObject"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "FilterBaseOfObject": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "nullable": true
           }
         }
       },
@@ -800,6 +1193,38 @@
           }
         }
       },
+      "PageListOfUserDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "pageIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageTotal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "filteredTotal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserDto"
+            }
+          }
+        }
+      },
       "UserDto": {
         "type": "object",
         "additionalProperties": false,
@@ -829,92 +1254,6 @@
           }
         }
       },
-      "FilterRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "pageIndex": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "sort": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FilterSort"
-            }
-          },
-          "filter": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FilterObject"
-            }
-          }
-        }
-      },
-      "FilterSort": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/FilterBaseOfZorroSortEnum"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false
-          }
-        ]
-      },
-      "FilterBaseOfZorroSortEnum": {
-        "type": "object",
-        "x-abstract": true,
-        "additionalProperties": false,
-        "properties": {
-          "key": {
-            "type": "string"
-          },
-          "value": {
-            "$ref": "#/components/schemas/ZorroSortEnum"
-          }
-        }
-      },
-      "ZorroSortEnum": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Asc",
-          "Desc"
-        ],
-        "enum": [
-          0,
-          1
-        ]
-      },
-      "FilterObject": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/FilterBaseOfObject"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false
-          }
-        ]
-      },
-      "FilterBaseOfObject": {
-        "type": "object",
-        "x-abstract": true,
-        "additionalProperties": false,
-        "properties": {
-          "key": {
-            "type": "string"
-          },
-          "value": {
-            "nullable": true
-          }
-        }
-      },
       "CreateUserCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -941,6 +1280,42 @@
           "roleId": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "TokenResponseModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
+          },
+          "accessTokenExpiration": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "refreshTokenExpiration": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "LoginCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "userName": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "deviceId": {
+            "type": "string",
+            "nullable": true
           }
         }
       }

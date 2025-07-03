@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using ProjectTemplate.Application.Common.Security;
-using ProjectTemplate.Domain.Enums;
 
 
 namespace ProjectTemplate.Web.Infrastructure;
@@ -8,60 +6,67 @@ namespace ProjectTemplate.Web.Infrastructure;
 public static class EndpointRouteBuilderExtensions
 {
 
-    public static IEndpointRouteBuilder MapGet(this IEndpointRouteBuilder builder, Delegate handler, params EnumPermission[] permissions)
-    => MapGet(builder, handler, handler.Method.Name, permissions);
+    public static RouteHandlerBuilder MapGet(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern = "")
+    {
+        Guard.Against.AnonymousMethod(handler);
+        var route = string.IsNullOrWhiteSpace(pattern)
+            ? "/" + handler.Method.Name
+            : pattern.StartsWith("/") ? pattern : "/" + pattern;
 
-    public static IEndpointRouteBuilder MapPost(this IEndpointRouteBuilder builder, Delegate handler, params EnumPermission[] permissions)
-    => MapPost(builder, handler, handler.Method.Name, permissions);
+        return builder.MapGet(route, handler)
+                      .WithName(handler.Method.Name)
+                      .WithTags(GetControllerName(handler))
+                      .WithOpenApi();
+    }
 
-    public static IEndpointRouteBuilder MapPut(this IEndpointRouteBuilder builder, Delegate handler, params EnumPermission[] permissions)
-    => MapPut(builder, handler, handler.Method.Name, permissions);
-
-    public static IEndpointRouteBuilder MapDelete(this IEndpointRouteBuilder builder, Delegate handler, params EnumPermission[] permissions)
-    => MapDelete(builder, handler, handler.Method.Name, permissions);
-
-    public static IEndpointRouteBuilder MapGet(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern = "", params EnumPermission[] permissions)
+    public static RouteHandlerBuilder MapPost(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern = "")
     {
         Guard.Against.AnonymousMethod(handler);
 
-        builder.MapGet(pattern, handler)
-              .WithName(handler.Method.Name)
-              .RequiredPermission(permissions);
+        var route = string.IsNullOrWhiteSpace(pattern)
+            ? "/" + handler.Method.Name
+            : pattern.StartsWith("/") ? pattern : "/" + pattern;
 
-        return builder;
+        return builder.MapPost(route, handler)
+                      .WithName(handler.Method.Name)
+                      .WithTags(GetControllerName(handler))
+                      .WithOpenApi();
     }
 
-    public static IEndpointRouteBuilder MapPost(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern = "", params EnumPermission[] permissions)
+    public static RouteHandlerBuilder MapPut(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern = "")
     {
         Guard.Against.AnonymousMethod(handler);
 
-        builder.MapPost(pattern, handler)
-            .WithName(handler.Method.Name)
-            .RequiredPermission(permissions);
+        var route = string.IsNullOrWhiteSpace(pattern)
+            ? "/" + handler.Method.Name
+            : pattern.StartsWith("/") ? pattern : "/" + pattern;
 
-        return builder;
+        return builder.MapPut(route, handler)
+                      .WithName(handler.Method.Name)
+                      .WithTags(GetControllerName(handler))
+                      .WithOpenApi();
     }
 
-    public static IEndpointRouteBuilder MapPut(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern, params EnumPermission[] permissions)
+    public static RouteHandlerBuilder MapDelete(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern = "")
     {
         Guard.Against.AnonymousMethod(handler);
 
-        builder.MapPut(pattern, handler)
-            .WithName(handler.Method.Name)
-            .RequiredPermission(permissions);
+        var route = string.IsNullOrWhiteSpace(pattern)
+            ? "/" + handler.Method.Name
+            : pattern.StartsWith("/") ? pattern : "/" + pattern;
 
-        return builder;
+        return builder.MapDelete(route, handler)
+                      .WithName(handler.Method.Name)
+                      .WithTags(GetControllerName(handler))
+                      .WithOpenApi();
     }
 
-    public static IEndpointRouteBuilder MapDelete(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern, params EnumPermission[] permissions)
+
+    private static string GetControllerName(Delegate handler)
     {
-        Guard.Against.AnonymousMethod(handler);
-
-        builder.MapDelete(pattern, handler)
-            .WithName(handler.Method.Name)
-            .RequiredPermission(permissions);
-
-        return builder;
+        var type = handler.Method.DeclaringType?.Name ?? "Default";
+        return type.Replace("Endpoints", "").Replace("Group", "");
     }
+
 }
 

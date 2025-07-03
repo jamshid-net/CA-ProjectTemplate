@@ -2,7 +2,7 @@
 using System.Reflection;
 
 namespace ProjectTemplate.Application.Common.QueryFilter;
-public static class ZorroQueryableExtension
+public static class FilterQueryableExtension
 {
     public static IQueryable<T> ApplyPageRequest<T>(this IQueryable<T> query, FilterRequest pageRequest)
     {
@@ -87,4 +87,20 @@ public static class ZorroQueryableExtension
 
         return (IOrderedQueryable<T>)method.Invoke(null, [query, lambda])!;
     }
+
+    public static async Task<PageList<T>> ToPageListAsync<T>(
+        this IQueryable<T> query,
+        FilterRequest filterRequest,
+        CancellationToken cancellationToken = default)
+    {
+
+        var count = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        var (items,filteredCount) = await query.ApplyPageRequestWithFilteredCount(filterRequest);
+
+        var result = await items.ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+        
+        return new PageList<T>(result, filterRequest.PageIndex, filterRequest.PageSize, count, filteredCount);
+    }
+
 }

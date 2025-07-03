@@ -26,7 +26,7 @@ public static class DependencyInjection
         // Customise default API behaviour
         builder.Services.Configure<ApiBehaviorOptions>(options =>
             options.SuppressModelStateInvalidFilter = true);
-
+        builder.Services.AddProblemDetails(); 
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddOpenApiDocument((configure, sp) =>
@@ -34,7 +34,7 @@ public static class DependencyInjection
             configure.Title = "ProjectTemplate API";
 
             // Add JWT
-            configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+            configure.AddSecurity("JWT", [], new OpenApiSecurityScheme
             {
                 Type = OpenApiSecuritySchemeType.ApiKey,
                 Name = "Authorization",

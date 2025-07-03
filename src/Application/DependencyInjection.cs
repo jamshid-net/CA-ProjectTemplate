@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectTemplate.Application.Common.Behaviours;
+using ProjectTemplate.Application.Common.Constants;
 using ProjectTemplate.Application.Common.Interfaces;
 using ProjectTemplate.Application.Common.Services;
 using Serilog;
@@ -37,7 +38,12 @@ public static class DependencyInjection
             .Enrich.FromLogContext()
             .WriteTo.File(@$"{logPath}/log.log", LogEventLevel.Warning, rollingInterval: RollingInterval.Day)
             .WriteTo.Console(LogEventLevel.Warning)
-            .WriteTo.TeleSink(telegramBotToken, telegramChatId, null, LogEventLevel.Error)
             .CreateLogger();
+
+
+        TelegramLog.Logger = new LoggerConfiguration().WriteTo
+                                                      .TeleSink(telegramBotToken, telegramChatId, null, LogEventLevel.Error)
+                                                      .CreateLogger();
+
     }
 }

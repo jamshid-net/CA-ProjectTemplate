@@ -1,8 +1,8 @@
-﻿using ProjectTemplate.Application.Common.Interfaces;
-using ProjectTemplate.Domain.Common;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using ProjectTemplate.Application.Common.Interfaces;
+using ProjectTemplate.Domain.Common;
 
 namespace ProjectTemplate.Infrastructure.Data.Interceptors;
 
@@ -33,11 +33,11 @@ public class AuditableEntityInterceptor(
             if (entry.State is EntityState.Added or EntityState.Modified || entry.HasChangedOwnedEntities())
             {
                 var utcNow = dateTime.GetUtcNow();
-                if (entry.State == EntityState.Added)
+                if (entry.State is EntityState.Added)
                 {
                     entry.Entity.CreatedBy = user.Id;
                     entry.Entity.Created = utcNow;
-                } 
+                }
                 entry.Entity.LastModifiedBy = user.Id;
                 entry.Entity.LastModified = utcNow;
             }
@@ -48,8 +48,8 @@ public class AuditableEntityInterceptor(
 public static class Extensions
 {
     public static bool HasChangedOwnedEntities(this EntityEntry entry) =>
-        entry.References.Any(r => 
-            r.TargetEntry != null && 
-            r.TargetEntry.Metadata.IsOwned() && 
+        entry.References.Any(r =>
+            r.TargetEntry is not null &&
+            r.TargetEntry.Metadata.IsOwned() &&
             r.TargetEntry.State is EntityState.Added or EntityState.Modified);
 }

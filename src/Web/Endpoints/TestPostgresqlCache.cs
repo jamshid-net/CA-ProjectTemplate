@@ -5,13 +5,11 @@ namespace ProjectTemplate.Web.Endpoints;
 
 public class TestPostgresqlCache : EndpointGroupBase
 {
-    public override void Map(WebApplication app)
+    public override void Map(RouteGroupBuilder group)
     {
-        app.MapGroup(this)
-            .MapGet(GetValue)
-            .MapPost(SetValue)
-            .MapDelete(RemoveValue);
-
+        group.MapGet(GetValue);
+        group.MapPost(SetValue);
+        group.MapDelete(RemoveValue);
     }
 
     public async Task<Results<Ok<string>, NotFound>> GetValue(IPostgresCacheService service, string key, CancellationToken ct)
@@ -33,4 +31,5 @@ public class TestPostgresqlCache : EndpointGroupBase
         var isRemoved = await service.RemoveAsync(key, ct);
         return  isRemoved ? TypedResults.NoContent() : TypedResults.NotFound();
     }
+
 }
