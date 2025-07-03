@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ProjectTemplate.Application.Common.Interfaces;
 using ProjectTemplate.Application.Common.QueryFilter;
 using ProjectTemplate.Application.RoleAndPermissions.Commands;
 using ProjectTemplate.Application.RoleAndPermissions.Queries;
+using Serilog;
 
 namespace ProjectTemplate.Web.Endpoints;
 
@@ -13,7 +15,7 @@ public class Roles : EndpointGroupBase
         group.MapPost(CreateRole);
         group.MapPut(UpdateRole);
         group.MapDelete(DeleteRole);
-        group.MapGet(GetRoleDetails);          
+        group.MapGet(GetRoleDetails);
         group.MapPost(GetRoles);
     }
 
@@ -51,9 +53,11 @@ public class Roles : EndpointGroupBase
         return TypedResults.Ok(role);
     }
 
-    public async Task<Ok<PageList<RoleDto>>> GetRoles(ISender sender, [FromBody] FilterRequest filterRequest, CancellationToken ct)
+    public async Task<Ok<PageList<RoleDto>>> GetRoles(ISender sender, IUser user, [FromBody] GetRolesFilterQuery filterQueryFilterQueryRequest, CancellationToken ct)
     {
-        var roles = await sender.Send(new GetRolesQuery(filterRequest), ct);
+        var currentUser = user.Id ?? string.Empty;
+        Log.Information("Current User ID: {UserId}", currentUser);
+        var roles = await sender.Send(filterQueryFilterQueryRequest, ct);
         return TypedResults.Ok(roles);
     }
 }

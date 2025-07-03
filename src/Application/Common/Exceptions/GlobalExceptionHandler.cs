@@ -51,7 +51,7 @@ public sealed class GlobalExceptionHandler(IHostEnvironment hostEnvironment) : I
                               """;
 
 
-            Log.Error("Exception in {App}:{Env}. Type: {ExceptionType}. Path: {Path}. Message: {Message}. UserId: {UserId}",
+            Log.Error("[Exception in {App}:{Env}. Type: {ExceptionType}. Path: {Path}. Message: {Message}. UserId: {UserId}]",
                 hostEnvironment.ApplicationName,
                 hostEnvironment.EnvironmentName,
                 exception.GetType().Name,

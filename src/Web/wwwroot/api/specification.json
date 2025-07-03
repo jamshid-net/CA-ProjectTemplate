@@ -140,11 +140,11 @@
         ],
         "operationId": "GetRoles",
         "requestBody": {
-          "x-name": "filterRequest",
+          "x-name": "filterQueryFilterQueryRequest",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FilterRequest"
+                "$ref": "#/components/schemas/GetRolesFilterQuery"
               }
             }
           },
@@ -636,7 +636,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FilterRequest"
+                "$ref": "#/components/schemas/GetUserFilterQuery"
               }
             }
           },
@@ -849,17 +849,35 @@
         }
       },
       "RoleDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseAuditDto"
           },
-          "name": {
-            "type": "string"
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
           }
-        }
+        ]
+      },
+      "GetRolesFilterQuery": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/FilterRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
       },
       "FilterRequest": {
         "type": "object",
@@ -1246,13 +1264,33 @@
           "userName": {
             "type": "string"
           },
-          "email": {
-            "type": "string"
-          },
           "isActive": {
             "type": "boolean"
+          },
+          "lastLogin": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "failedLoginAttempts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "roleId": {
+            "type": "integer",
+            "format": "int32"
           }
         }
+      },
+      "GetUserFilterQuery": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/FilterRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
       },
       "CreateUserCommand": {
         "type": "object",

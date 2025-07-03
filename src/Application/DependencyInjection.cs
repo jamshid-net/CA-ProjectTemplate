@@ -18,6 +18,7 @@ public static class DependencyInjection
         builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
         builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.Services.AddScoped<ICustomIdentityService, CustomIdentityService>();
 
         builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
@@ -27,7 +28,7 @@ public static class DependencyInjection
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
         });
-
+    
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         var logPath = environment == Environments.Development ? "logs" : $"/var/www/eRecruitingLogs/";
         
@@ -37,7 +38,7 @@ public static class DependencyInjection
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .Enrich.FromLogContext()
             .WriteTo.File(@$"{logPath}/log.log", LogEventLevel.Warning, rollingInterval: RollingInterval.Day)
-            .WriteTo.Console(LogEventLevel.Warning)
+            .WriteTo.Console(LogEventLevel.Information)
             .CreateLogger();
 
 

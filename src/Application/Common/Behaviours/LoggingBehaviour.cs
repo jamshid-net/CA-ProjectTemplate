@@ -4,23 +4,15 @@ using Microsoft.Extensions.Logging;
 
 namespace ProjectTemplate.Application.Common.Behaviours;
 
-public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
+public class LoggingBehaviour<TRequest>(ILogger<TRequest> logger, IUser user) : IRequestPreProcessor<TRequest>
+    where TRequest : notnull
 {
-    private readonly ILogger _logger;
-    private readonly IUser _user;
-    //private readonly IIdentityService _identityService;
-
-    public LoggingBehaviour(ILogger<TRequest> logger, IUser user)
-    {
-        _logger = logger;
-        _user = user;
-        //_identityService = identityService;
-    }
-
+    private readonly ILogger _logger = logger;
+     
     public async Task Process(TRequest request, CancellationToken cancellationToken)
     {
         var requestName = typeof(TRequest).Name;
-        var userId = _user.Id ?? string.Empty;
+        var userId = user.Id ?? string.Empty;
         string? userName = string.Empty;
 
         //if (!string.IsNullOrEmpty(userId))

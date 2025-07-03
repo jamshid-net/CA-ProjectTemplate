@@ -28,7 +28,12 @@ public class TokenService(IApplicationDbContext dbContext) : ITokenService
         var comingHashedPassword = CryptoPassword.GetHashSalted(command.Password, foundUser.PasswordSalt);
 
         if (foundUser.PasswordHash != comingHashedPassword)
-            throw new NotFoundException(command.UserName, nameof(User));
+        {
+            foundUser.FailedLoginAttempts++;
+            dbContext.Users.Update(foundUser);
+            await dbContext.SaveChangesAsync(ct);
+            throw new ErrorFromClientException("Invalid username or password.");
+        }
 
         var refreshToken = Guid.NewGuid().ToLowerString();
 
@@ -88,13 +93,11 @@ public class TokenService(IApplicationDbContext dbContext) : ITokenService
         var utcNow = DateTime.UtcNow;
         List<Claim> claims =
         [
-            new Claim(JwtRegisteredClaimNames.Sub, userToken.DeviceId ?? string.Empty),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToLowerString()),
             new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture)),
+            new Claim(StaticClaims.DeviceId, userToken.DeviceId ?? string.Empty),
             new Claim(StaticClaims.UserId, userToken.UserId.ToString()),
             new Claim(StaticClaims.RoleId, userToken.User?.RoleId.ToString() ?? "0"),
-            
-
         ];
 
 

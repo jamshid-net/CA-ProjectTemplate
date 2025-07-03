@@ -14,14 +14,14 @@ public class Users : EndpointGroupBase
 {
     public override void Map(RouteGroupBuilder group)
     {
-        group.MapPost(GetUsers).RequiredPermission();
+        group.MapPost(GetUsers);
         group.MapPost(CreateUser).RequiredPermission(EnumPermission.CreateUser);
         group.MapPost(Login);
     }
 
-    public async Task<Ok<PageList<UserDto>>> GetUsers(ISender sender, [FromBody] FilterRequest filter)
+    public async Task<Ok<PageList<UserDto>>> GetUsers(ISender sender, [FromBody] GetUserFilterQuery filter)
     {
-        var res = await sender.Send(new GetUsers(filter));
+        var res = await sender.Send(filter);
 
         return TypedResults.Ok(res);
     }

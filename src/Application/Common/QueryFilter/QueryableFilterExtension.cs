@@ -34,10 +34,14 @@ public static class FilterQueryableExtension
             var sortedQuery = pageRequest.Sort.Aggregate(query, ApplySorting);
             query = sortedQuery;
         }
+        else
+        {
+            query = query.OrderBy(p => GetIdOrFirstProperty<T>());
+        }
         int filteredCount = await query.CountAsync();
         // Apply paging
         query = query.Skip(pageRequest.PageIndex * pageRequest.PageSize)
-            .Take(pageRequest.PageSize);
+                     .Take(pageRequest.PageSize);
 
         return (query, filteredCount);
     }
@@ -55,7 +59,7 @@ public static class FilterQueryableExtension
             var languageCode = keyParts[1];
 
             // Get the main property (e.g., Name)
-            var multiLanguageFieldProperty = typeof(T).GetProperty(propertyName,BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+            var multiLanguageFieldProperty = typeof(T).GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
             if (multiLanguageFieldProperty == null)
             {
                 throw new InvalidOperationException($"Property {propertyName} not found on type {typeof(T).Name}");
@@ -95,12 +99,24 @@ public static class FilterQueryableExtension
     {
 
         var count = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        var (items,filteredCount) = await query.ApplyPageRequestWithFilteredCount(filterRequest);
+        var (items, filteredCount) = await query.ApplyPageRequestWithFilteredCount(filterRequest);
 
         var result = await items.ToListAsync(cancellationToken)
             .ConfigureAwait(false);
-        
+
         return new PageList<T>(result, filterRequest.PageIndex, filterRequest.PageSize, count, filteredCount);
     }
 
+
+    private static string? GetIdOrFirstProperty<T>()
+    {
+        var type = typeof(T);
+
+        var flags = BindingFlags.Public | BindingFlags.Instance;
+
+        var idProperty = type.GetProperty("Id", flags);
+        return !string.IsNullOrEmpty(idProperty?.Name) ?
+                idProperty.Name :
+                type.GetProperties(flags).FirstOrDefault()?.Name;
+    }
 }

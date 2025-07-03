@@ -1,7 +1,8 @@
-﻿using ProjectTemplate.Domain.Entities.Auth;
+﻿using ProjectTemplate.Application.Common.Models;
+using ProjectTemplate.Domain.Entities.Auth;
 
 namespace ProjectTemplate.Application.RoleAndPermissions.Queries;
-public class RoleDto
+public class RoleDto : BaseAuditDto
 {
     public int Id { get; set; }
     public required string Name { get; set; }
