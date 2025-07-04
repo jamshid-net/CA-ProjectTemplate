@@ -5,7 +5,6 @@ namespace ProjectTemplate.Web.Infrastructure;
 
 public static class EndpointRouteBuilderExtensions
 {
-
     public static RouteHandlerBuilder MapGet(this IEndpointRouteBuilder builder, Delegate handler, [StringSyntax("Route")] string pattern = "")
     {
         Guard.Against.AnonymousMethod(handler);
@@ -15,7 +14,6 @@ public static class EndpointRouteBuilderExtensions
 
         return builder.MapGet(route, handler)
                       .WithName(handler.Method.Name)
-                      .WithTags(GetControllerName(handler))
                       .WithOpenApi();
     }
 
@@ -29,7 +27,6 @@ public static class EndpointRouteBuilderExtensions
 
         return builder.MapPost(route, handler)
                       .WithName(handler.Method.Name)
-                      .WithTags(GetControllerName(handler))
                       .WithOpenApi();
     }
 
@@ -43,7 +40,6 @@ public static class EndpointRouteBuilderExtensions
 
         return builder.MapPut(route, handler)
                       .WithName(handler.Method.Name)
-                      .WithTags(GetControllerName(handler))
                       .WithOpenApi();
     }
 
@@ -57,16 +53,7 @@ public static class EndpointRouteBuilderExtensions
 
         return builder.MapDelete(route, handler)
                       .WithName(handler.Method.Name)
-                      .WithTags(GetControllerName(handler))
                       .WithOpenApi();
     }
-
-
-    private static string GetControllerName(Delegate handler)
-    {
-        var type = handler.Method.DeclaringType?.Name ?? "Default";
-        return type.Replace("Endpoints", "").Replace("Group", "");
-    }
-
 }
 

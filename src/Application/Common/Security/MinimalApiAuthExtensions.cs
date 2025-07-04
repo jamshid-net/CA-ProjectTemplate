@@ -24,10 +24,10 @@ public static class MinimalApiAuthExtensions
             // 2. Permissions check
             if (enumPermissions is { Length: > 0 })
             {
-                var cacheService = httpContext.RequestServices.GetRequiredService<IPostgresCacheService>();
-
                 if (!int.TryParse(user?.FindFirst(StaticClaims.RoleId)?.Value, out int userRoleId))
                     return Results.Forbid();
+
+                var cacheService = httpContext.RequestServices.GetRequiredService<IPostgresCacheService>();
 
                 var permissions = await cacheService.GetAsync<List<EnumPermission>>($"role_id:{userRoleId}");
                 if (permissions is not null && !permissions.Intersect(enumPermissions).Any())
@@ -44,5 +44,7 @@ public static class MinimalApiAuthExtensions
 
         return builder;
     }
+
+    //private static async Task<>
 }
 

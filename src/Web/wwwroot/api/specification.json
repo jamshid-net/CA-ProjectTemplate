@@ -6,11 +6,10 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/Roles/CreateRole": {
+    "/api/web/Roles/CreateRole": {
       "post": {
         "tags": [
-          "Roles",
-          "Roles"
+          "roles"
         ],
         "operationId": "CreateRole",
         "requestBody": {
@@ -41,11 +40,10 @@
         }
       }
     },
-    "/api/Roles/UpdateRole": {
+    "/api/web/Roles/UpdateRole": {
       "put": {
         "tags": [
-          "Roles",
-          "Roles"
+          "roles"
         ],
         "operationId": "UpdateRole",
         "requestBody": {
@@ -70,11 +68,10 @@
         }
       }
     },
-    "/api/Roles/DeleteRole": {
+    "/api/web/Roles/DeleteRole": {
       "delete": {
         "tags": [
-          "Roles",
-          "Roles"
+          "roles"
         ],
         "operationId": "DeleteRole",
         "requestBody": {
@@ -99,11 +96,10 @@
         }
       }
     },
-    "/api/Roles/GetRoleDetails": {
+    "/api/web/Roles/GetRoleDetails": {
       "get": {
         "tags": [
-          "Roles",
-          "Roles"
+          "roles"
         ],
         "operationId": "GetRoleDetails",
         "parameters": [
@@ -132,11 +128,10 @@
         }
       }
     },
-    "/api/Roles/GetRoles": {
+    "/api/web/Roles/GetRoles": {
       "post": {
         "tags": [
-          "Roles",
-          "Roles"
+          "roles"
         ],
         "operationId": "GetRoles",
         "requestBody": {
@@ -165,11 +160,10 @@
         }
       }
     },
-    "/api/TestPostgresqlCache/GetValue": {
+    "/api/web/TestPostgresqlCache/GetValue": {
       "get": {
         "tags": [
-          "TestPostgresqlCache",
-          "TestPostgresqlCache"
+          "test_postgresql_cache"
         ],
         "operationId": "GetValue",
         "parameters": [
@@ -200,11 +194,10 @@
         }
       }
     },
-    "/api/TestPostgresqlCache/SetValue": {
+    "/api/web/TestPostgresqlCache/SetValue": {
       "post": {
         "tags": [
-          "TestPostgresqlCache",
-          "TestPostgresqlCache"
+          "test_postgresql_cache"
         ],
         "operationId": "SetValue",
         "requestBody": {
@@ -235,11 +228,10 @@
         }
       }
     },
-    "/api/TestPostgresqlCache/RemoveValue": {
+    "/api/web/TestPostgresqlCache/RemoveValue": {
       "delete": {
         "tags": [
-          "TestPostgresqlCache",
-          "TestPostgresqlCache"
+          "test_postgresql_cache"
         ],
         "operationId": "RemoveValue",
         "parameters": [
@@ -269,11 +261,10 @@
         }
       }
     },
-    "/api/TodoItems/GetTodoItemsWithPagination": {
+    "/api/web/TodoItems/GetTodoItemsWithPagination": {
       "get": {
         "tags": [
-          "TodoItems",
-          "TodoItems"
+          "todo_items"
         ],
         "operationId": "GetTodoItemsWithPagination",
         "parameters": [
@@ -322,11 +313,10 @@
         }
       }
     },
-    "/api/TodoItems/CreateTodoItem": {
+    "/api/web/TodoItems/CreateTodoItem": {
       "post": {
         "tags": [
-          "TodoItems",
-          "TodoItems"
+          "todo_items"
         ],
         "operationId": "CreateTodoItem",
         "requestBody": {
@@ -362,11 +352,10 @@
         }
       }
     },
-    "/api/TodoItems/{id}": {
+    "/api/web/TodoItems/{id}": {
       "put": {
         "tags": [
-          "TodoItems",
-          "TodoItems"
+          "todo_items"
         ],
         "operationId": "UpdateTodoItem",
         "parameters": [
@@ -410,8 +399,7 @@
       },
       "delete": {
         "tags": [
-          "TodoItems",
-          "TodoItems"
+          "todo_items"
         ],
         "operationId": "DeleteTodoItem",
         "parameters": [
@@ -439,11 +427,10 @@
         }
       }
     },
-    "/api/TodoItems/UpdateDetail/{id}": {
+    "/api/web/TodoItems/UpdateDetail/{id}": {
       "put": {
         "tags": [
-          "TodoItems",
-          "TodoItems"
+          "todo_items"
         ],
         "operationId": "UpdateTodoItemDetail",
         "parameters": [
@@ -486,11 +473,10 @@
         }
       }
     },
-    "/api/TodoLists/GetTodoLists": {
+    "/api/web/TodoLists/GetTodoLists": {
       "get": {
         "tags": [
-          "TodoLists",
-          "TodoLists"
+          "todo_lists"
         ],
         "operationId": "GetTodoLists",
         "responses": {
@@ -507,11 +493,10 @@
         }
       }
     },
-    "/api/TodoLists/CreateTodoList": {
+    "/api/web/TodoLists/CreateTodoList": {
       "post": {
         "tags": [
-          "TodoLists",
-          "TodoLists"
+          "todo_lists"
         ],
         "operationId": "CreateTodoList",
         "requestBody": {
@@ -547,11 +532,10 @@
         }
       }
     },
-    "/api/TodoLists/{id}": {
+    "/api/web/TodoLists/{id}": {
       "put": {
         "tags": [
-          "TodoLists",
-          "TodoLists"
+          "todo_lists"
         ],
         "operationId": "UpdateTodoList",
         "parameters": [
@@ -595,8 +579,7 @@
       },
       "delete": {
         "tags": [
-          "TodoLists",
-          "TodoLists"
+          "todo_lists"
         ],
         "operationId": "DeleteTodoList",
         "parameters": [
@@ -624,11 +607,10 @@
         }
       }
     },
-    "/api/Users/GetUsers": {
+    "/api/web/Users/GetUsers": {
       "post": {
         "tags": [
-          "Users",
-          "Users"
+          "users"
         ],
         "operationId": "GetUsers",
         "requestBody": {
@@ -657,11 +639,10 @@
         }
       }
     },
-    "/api/Users/CreateUser": {
+    "/api/web/Users/CreateUser": {
       "post": {
         "tags": [
-          "Users",
-          "Users"
+          "users"
         ],
         "operationId": "CreateUser",
         "requestBody": {
@@ -686,11 +667,10 @@
         }
       }
     },
-    "/api/Users/Login": {
+    "/api/web/Users/Login": {
       "post": {
         "tags": [
-          "Users",
-          "Users"
+          "users"
         ],
         "operationId": "Login",
         "requestBody": {

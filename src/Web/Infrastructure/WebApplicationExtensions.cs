@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using ProjectTemplate.Shared.Extensions;
 
 namespace ProjectTemplate.Web.Infrastructure;
 
@@ -7,11 +8,13 @@ public static class WebApplicationExtensions
     public static RouteGroupBuilder MapGroup(this WebApplication app, EndpointGroupBase group)
     {
         var groupName = group.GetType().Name;
+        var assembly = Assembly.GetExecutingAssembly();
+        var t = assembly.GetName();
 
         return app
-            .MapGroup($"/api/{groupName}")
+            .MapGroup($"/api/web/{groupName}") 
             .WithGroupName(groupName)
-            .WithTags(groupName);
+            .WithTags(groupName.FromCamelCaseToSnakeCase());
     }
 
     public static WebApplication MapEndpoints(this WebApplication app)
