@@ -380,7 +380,7 @@ namespace ProjectTemplate.Infrastructure.Migrations
 
                             b1.HasKey("TodoListId");
 
-                            b1.ToTable("todo_lists");
+                            b1.ToTable("todo_lists", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("TodoListId")

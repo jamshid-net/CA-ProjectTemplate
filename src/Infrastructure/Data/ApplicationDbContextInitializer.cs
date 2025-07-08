@@ -1,11 +1,10 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using ProjectTemplate.Application.Common.Interfaces;
 using ProjectTemplate.Domain.Entities.Auth;
 using ProjectTemplate.Domain.Enums;
-using ProjectTemplate.Shared.PostgresqlCache;
 
 namespace ProjectTemplate.Infrastructure.Data;
 
@@ -33,7 +32,7 @@ public static class InitializerExtensions
 
 public class ApplicationDbContextInitializer(
     ILogger<ApplicationDbContextInitializer> logger,
-    IPostgresCacheService cacheService,
+    IPermissionCacheService cacheService,
     ApplicationDbContext context)
 {
     public async Task InitialiseAsync()
@@ -108,26 +107,19 @@ public class ApplicationDbContextInitializer(
                      {
                          RoleId = x.Id,
                          EnumPermissions = x.Permissions.Select(p => p.EnumPermission)
-                     }).ToDictionaryAsync(x => $"role_id:{x.RoleId}", y => y.EnumPermissions.ToArray());
+                     }).ToDictionaryAsync(x => x.RoleId, y => y.EnumPermissions.ToArray());
 
-        try
+
+        foreach (var roleIdAndPermission in roleIdAndPermissions)
         {
-            foreach (var roleIdAndPermission in roleIdAndPermissions)
-            {
-                await cacheService.SetAsync(new CacheItem<EnumPermission[]>(roleIdAndPermission.Key, roleIdAndPermission.Value, null));
-            }
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e, "An error occurred while loading permissions to cache.");
-            throw;
+            await cacheService.SetPermissionAsync(roleIdAndPermission.Key, roleIdAndPermission.Value);
         }
     }
 
     private static Permission[] DefaultPermissions()
     {
         var enumPermissions = Enum.GetValues<EnumPermission>();
-     
+
         var authPermissions = enumPermissions.Select(permission =>
         {
             if (permission == 0)

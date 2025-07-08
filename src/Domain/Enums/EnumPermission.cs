@@ -9,5 +9,4 @@ public enum EnumPermission
     UpdateUser = 6,
     DeleteUser = 7,
     GetUser = 8,
-
 }

@@ -1,12 +1,10 @@
 ﻿using ProjectTemplate.Application.Common.Interfaces;
 using ProjectTemplate.Domain.Entities.Auth;
 using ProjectTemplate.Domain.Enums;
-using ProjectTemplate.Shared.PostgresqlCache;
-using Serilog;
 
 namespace ProjectTemplate.Application.RoleAndPermissions.Commands;
-public record UpdateRoleCommand(int Id, string Name, int[] PermissionIds) : IRequest<bool>;
-public class UpdateRoleCommandHandler(IApplicationDbContext dbContext, IPostgresCacheService cacheService) : IRequestHandler<UpdateRoleCommand, bool>
+public record UpdateRoleCommand(int Id, string Name, EnumPermission[] Permissions) : IRequest<bool>;
+public class UpdateRoleCommandHandler(IApplicationDbContext dbContext, IPermissionCacheService cacheService) : IRequestHandler<UpdateRoleCommand, bool>
 {
     public async Task<bool> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
     {
@@ -17,7 +15,7 @@ public class UpdateRoleCommandHandler(IApplicationDbContext dbContext, IPostgres
         }
         role.Name = request.Name;
         role.Permissions = await dbContext.Permissions
-                                          .Where(p => request.PermissionIds.Contains(p.Id))
+                                          .Where(p => request.Permissions.Contains(p.EnumPermission))
                                           .ToListAsync(cancellationToken);
 
         dbContext.Roles.Update(role);
@@ -25,20 +23,8 @@ public class UpdateRoleCommandHandler(IApplicationDbContext dbContext, IPostgres
 
         if (isSaved)
         {
-            try
-            {
-                await cacheService.SetAsync(new CacheItem<EnumPermission[]>(
-                    $"role_id:{role.Id}",
-                    role.Permissions.Select(p => p.EnumPermission).ToArray(),
-                    null), cancellationToken);
-            }
-            catch (Exception e)
-            {
-                Log.Error(e, "Error updating role permissions in cache for role ID {RoleId}", role.Id);
-            }
-            
+            await cacheService.SetPermissionAsync(role.Id, request.Permissions, cancellationToken);
         }
         return isSaved;
-
     }
 }

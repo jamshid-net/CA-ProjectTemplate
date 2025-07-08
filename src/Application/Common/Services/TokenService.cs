@@ -93,11 +93,11 @@ public class TokenService(IApplicationDbContext dbContext) : ITokenService
         var utcNow = DateTime.UtcNow;
         List<Claim> claims =
         [
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToLowerString()),
-            new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture)),
-            new Claim(StaticClaims.DeviceId, userToken.DeviceId ?? string.Empty),
-            new Claim(StaticClaims.UserId, userToken.UserId.ToString()),
-            new Claim(StaticClaims.RoleId, userToken.User?.RoleId.ToString() ?? "0"),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToLowerString()),
+            new (JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture)),
+            new (StaticClaims.DeviceId, userToken.DeviceId ?? string.Empty),
+            new (StaticClaims.UserId, userToken.UserId.ToString()),
+            new (StaticClaims.RoleId, userToken.User?.RoleId.ToString() ?? "0"),
         ];
 
 

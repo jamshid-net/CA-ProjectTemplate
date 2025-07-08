@@ -160,10 +160,10 @@
         }
       }
     },
-    "/api/web/TestPostgresqlCache/GetValue": {
+    "/api/web/TestRedisCache/GetValue": {
       "get": {
         "tags": [
-          "test_postgresql_cache"
+          "test_redis_cache"
         ],
         "operationId": "GetValue",
         "parameters": [
@@ -194,23 +194,34 @@
         }
       }
     },
-    "/api/web/TestPostgresqlCache/SetValue": {
+    "/api/web/TestRedisCache/SetValue": {
       "post": {
         "tags": [
-          "test_postgresql_cache"
+          "test_redis_cache"
         ],
         "operationId": "SetValue",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
         "requestBody": {
-          "x-name": "cacheItem",
+          "x-name": "value",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CacheItemOfString"
+                "$ref": "#/components/schemas/JsonValue"
               }
             }
           },
           "required": true,
-          "x-position": 1
+          "x-position": 2
         },
         "responses": {
           "200": {
@@ -221,17 +232,14 @@
           },
           "201": {
             "description": ""
-          },
-          "400": {
-            "description": ""
           }
         }
       }
     },
-    "/api/web/TestPostgresqlCache/RemoveValue": {
+    "/api/web/TestRedisCache/RemoveValue": {
       "delete": {
         "tags": [
-          "test_postgresql_cache"
+          "test_redis_cache"
         ],
         "operationId": "RemoveValue",
         "parameters": [
@@ -254,9 +262,29 @@
           },
           "204": {
             "description": ""
-          },
-          "404": {
-            "description": ""
+          }
+        }
+      }
+    },
+    "/api/web/TestRedisCache/GetAllTest": {
+      "get": {
+        "tags": [
+          "test_redis_cache"
+        ],
+        "operationId": "GetAllTest",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -709,14 +737,37 @@
           "name": {
             "type": "string"
           },
-          "permissionIds": {
+          "permissions": {
             "type": "array",
             "items": {
-              "type": "integer",
-              "format": "int32"
+              "$ref": "#/components/schemas/EnumPermission"
             }
           }
         }
+      },
+      "EnumPermission": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "CreateRole",
+          "UpdateRole",
+          "DeleteRole",
+          "GetRole",
+          "CreateUser",
+          "UpdateUser",
+          "DeleteUser",
+          "GetUser"
+        ],
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
       },
       "UpdateRoleCommand": {
         "type": "object",
@@ -729,11 +780,10 @@
           "name": {
             "type": "string"
           },
-          "permissionIds": {
+          "permissions": {
             "type": "array",
             "items": {
-              "type": "integer",
-              "format": "int32"
+              "$ref": "#/components/schemas/EnumPermission"
             }
           }
         }
@@ -945,21 +995,64 @@
           }
         }
       },
-      "CacheItemOfString": {
+      "JsonValue": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/JsonNode"
+          },
+          {
+            "type": "object",
+            "description": "Represents a mutable JSON value.",
+            "x-abstract": true,
+            "additionalProperties": false
+          }
+        ]
+      },
+      "JsonNode": {
         "type": "object",
+        "description": "The base class that represents a single node within a mutable JSON document.",
+        "x-abstract": true,
         "additionalProperties": false,
         "properties": {
-          "key": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string",
+          "underlyingElement": {
             "nullable": true
           },
-          "expirationInSeconds": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
+          "options": {
+            "description": "Gets the options to control the behavior.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/JsonNodeOptions"
+              }
+            ]
+          },
+          "parent": {
+            "description": "Gets the parent JsonNode.\n              If there is no parent, null is returned.\n              A parent can either be a JsonObject or a JsonArray.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/JsonNode"
+              }
+            ]
+          },
+          "root": {
+            "description": "Gets the root JsonNode.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/JsonNode"
+              }
+            ]
+          }
+        }
+      },
+      "JsonNodeOptions": {
+        "type": "object",
+        "description": "Options to control JsonNode behavior.",
+        "additionalProperties": false,
+        "properties": {
+          "propertyNameCaseInsensitive": {
+            "type": "boolean",
+            "description": "Gets or sets a value that indicates whether property names on JsonObject are case insensitive."
           }
         }
       },
